@@ -7,7 +7,7 @@ import { createStore } from 'redux';
 import App from './App';
 import './index.css';
 
-const initialState = ['todo 1','todo 2'];
+const initialState = ['esdafas','asfasd'];
 
 function toDoList(state = initialState, action){
   if(action.type === 'ADD_ITEM') {
