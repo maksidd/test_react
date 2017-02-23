@@ -7,39 +7,50 @@ import MyAwesomeReactComponent from './MyAwesomeReactComponent';
 import SelectFieldExampleSimple from './SelectFieldExampleSimple';
 import PopoverExampleSimple from './PopoverExampleSimple';
 import MenuExampleSimple from './MenuExampleSimple';
+import MyCheckbox from './MyCheckbox';
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 class App extends Component {
   addItem(){
-    this.props.onAddItem(this.itemInput.value);
+    this.props.onAddItem(this.itemInput.value, this.myCheckbox.state.switched);
     this.itemInput.value = '';
   }
   render() {
-    console.log(this.props.testStote);
-    return (
-    <div>
-      <MuiThemeProvider>
-          <SelectFieldExampleSimple />
-        </MuiThemeProvider>
-      <MuiThemeProvider>
-          <MenuExampleSimple />
-        </MuiThemeProvider>
-         <MuiThemeProvider>
-          <PopoverExampleSimple />
-        </MuiThemeProvider>
+      return (
+        <div>
+          <MuiThemeProvider>
+            <SelectFieldExampleSimple />
+          </MuiThemeProvider>
+          <MuiThemeProvider>
+            <MenuExampleSimple />
+          </MuiThemeProvider>
+           <MuiThemeProvider>
+            <PopoverExampleSimple />
+          </MuiThemeProvider>
 
-        <br/><br/>
+          <br/><br/>
 
-        <input type="text" ref={(input) =>{this.itemInput = input}}/>
-        <button onClick={this.addItem.bind(this)}>Add todo</button>
-        <ul>
-          {this.props.testStore.map((item, index) => <li key={index}>{item}</li>)}
-        </ul>
+          <input type="text" ref={(input) =>{this.itemInput = input}}/>
+          <button onClick={this.addItem.bind(this)}>Add todo</button>
+          <MuiThemeProvider>
+            <MyCheckbox  ref={(myCheckbox) =>{this.myCheckbox = myCheckbox}} />
+          </MuiThemeProvider>
+          add to subList
 
-
-      </div>
-    );
+          <ul>
+            {this.props.testStore.map((item, index) => (
+              <li key={index}>
+                {item.itemName}
+                {item.itemList.map(function(item, index){
+                  return (<ul><li key={index}>{item}</li></ul>);
+                })}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
   }
 }
 
@@ -48,8 +59,8 @@ export default connect(
       testStore: state
     }),
     dispatch => ({
-      onAddItem: (itemName) => {
-        dispatch({type: 'ADD_ITEM', payload: itemName })
+      onAddItem: (itemName, isSubList) => {
+        dispatch({type: 'ADD_ITEM', payload: itemName, isSubList: isSubList })
       }
     })
 )(App);
